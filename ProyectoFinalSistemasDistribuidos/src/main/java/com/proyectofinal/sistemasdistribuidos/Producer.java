@@ -22,7 +22,7 @@ public class Producer {
     @Autowired
     private KafkaTemplate<String, ConfirmationCart> kafkaTemplateListTotal;
 
-    @Value(value = "${message.topic.name:profesorp}")
+    @Value(value = "${message.topic.name:ShoppingCart}")
     private String topicName;
 
     public void sendMessage(String topic, String message) {

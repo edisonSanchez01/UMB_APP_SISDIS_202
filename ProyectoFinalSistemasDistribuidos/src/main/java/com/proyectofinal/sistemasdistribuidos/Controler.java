@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 
 @RestController
+@RequestMapping("shoppingcart")
 public class Controler {
 
     private ArrayList<Cart> carts = new ArrayList<>();
@@ -13,8 +14,8 @@ public class Controler {
     @Autowired
     Producer MessageProducer;
 
-    @PostMapping("/addItem")
-    public void addItem(@PathVariable String topic, @PathVariable String idCart, @RequestBody Producto body) {
+    @PostMapping("/addItem/{topic}/{idCart}")
+    public void addItem(@PathVariable String topic, @PathVariable String idCart, @RequestBody Producto product) {
         Cart currentCart = null;
         if(carts.isEmpty()){
             currentCart = new Cart(idCart);
@@ -30,11 +31,11 @@ public class Controler {
                 carts.add(currentCart);
             }
         }
-        currentCart.addProduct(body);
+        currentCart.addProduct(product);
         MessageProducer.sendMessage(topic, "Producto agregado al carrito de compras");
     }
 
-    @GetMapping("/showCart")
+    @GetMapping("/showCart/{topic}")
     public void showCart(@PathVariable String topic, @RequestParam(value = "idCart", required = true) String idCart){
         Cart currentCart = null;
         if(carts.isEmpty()){
@@ -53,7 +54,7 @@ public class Controler {
         }
     }
 
-    @DeleteMapping("/deleteItemCart")
+    @DeleteMapping("/deleteItemCart/{topic}")
     public void deleteItemCart(@PathVariable String topic, @RequestParam(value = "idCart", required = true) String idCart,
                                @RequestParam(value = "idProduct", required = true) int idProduct){
         Cart currentCart = null;
@@ -69,12 +70,12 @@ public class Controler {
                 MessageProducer.sendMessage(topic, "No existe un carrito de compras para mostrar");
             }else{
                 currentCart.eliminarProducto(idProduct);
-                MessageProducer.sendMessage(topic, "Producto eliminado del carriot de compras");
+                MessageProducer.sendMessage(topic, "Producto eliminado del carrito de compras");
             }
         }
     }
 
-    @DeleteMapping("/deleteAllItems")
+    @DeleteMapping("/deleteAllItems/{topic}")
     public void deleteAllItems(@PathVariable String topic, @RequestParam(value = "idCart", required = true) String idCart){
         Cart currentCart = null;
         if(carts.isEmpty()){
@@ -89,12 +90,12 @@ public class Controler {
                 MessageProducer.sendMessage(topic, "No existe un carrito de compras para mostrar");
             }else{
                 currentCart.deleteAllProducts();
-                MessageProducer.sendMessage(topic, "Se vaciado el carrito de compras");
+                MessageProducer.sendMessage(topic, "Se  ha vaciado el carrito de compras");
             }
         }
     }
 
-    @GetMapping("/confirmarComprar")
+    @GetMapping("/confirmarCompra/{topic}")
     public void confirmarCompra(@PathVariable String topic, @RequestParam(value = "idCart", required = true) String idCart){
         Cart currentCart = null;
         int precioTotalItems = 0;
@@ -119,6 +120,5 @@ public class Controler {
         }
 
     }
-
 
 }
