@@ -55,5 +55,5 @@ topic:	el topic del bróker
 idCart:	el id del carrito de compras que le pertenece a un único usuario
 
 Integrantes:
-Edison Armando Sanchez Avendaño
+Edison Armando Sanchez Avendaño y
 Stewar Bonikson Piñeros
